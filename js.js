@@ -21,11 +21,15 @@ function processing(string) {
             declaration('var', strArray.slice(1))
             break
         case `function`:
-            functionProcessing(strArray.slice(1))
+            functionCreator(strArray.slice(1))
             break
         case `close`: 
             scopeRemover()
             break
+        case `undo`: 
+            undo()
+            break
+
     }
 }
 
@@ -35,7 +39,14 @@ function declaration(type, strArray) {
     if (equalsIndex != -1) {
         variable = strArray.slice(0, strArray.indexOf('='))
         assignment = strArray.slice(strArray.indexOf("=") + 1)
-        assignment = Number(assignment)
+        if(!isNaN(assignment)) {
+            assignment = Number(assignment)
+        } else {
+            if(!(assignment === "true" || assignment === "false")) {
+                // Then it will be String right now
+                assignment = `'${assignment.join(" ")}'`
+            }
+        }
     } else {
         variable = strArray
     }
@@ -45,15 +56,10 @@ function declaration(type, strArray) {
     printCode()
 }
 
-function functionProcessing(strArray) {
+function functionCreator(strArray) {
     let functionName = methodNameCreator(strArray)
     let method = new Function(functionName)
-    // scope.push(method)
-
-    // After body is closed by Speaker
-    method.builder()
-    code.push(method)
-    printCode()
+    scope.push(method)
 }
 
 function methodNameCreator(strArray) {
@@ -78,6 +84,15 @@ function scopeAssigner(data) {
     }
 
     console.log(code.join("\n"))
+}
+
+function undo() {
+    if(scope.length > 0) {
+        scope[scope.length - 1].body.pop()
+    } else {
+        code.pop()
+    }
+    printCode()
 }
 
 function scopeRemover() {
