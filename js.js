@@ -4,6 +4,7 @@ let scope = []
 let dictated = [
     // `variable person count = 2000` // After let until equals all are concatenated. equals => = type
     `let is Animating = 3`,
+    `let exception = not a number`,
     `variable code = #include<iostream.h>`,
     `constant pi = 3.14`,
     `let is clock present = true`,
@@ -15,6 +16,10 @@ let dictated = [
     `console log hello world`,
     `close`,
     `function is animating`,
+    `let is Animating = 3`,
+    `let is number = not a number`,
+    `variable code = #include<iostream.h>`,
+    `constant pi = 3.14`,
     `return 1`,
     `close`,
     `return 5`
@@ -116,7 +121,6 @@ function assignArguments(strArray) {
 
 function returnToFunction(strArray) {
     if(scope.length == 0) {
-        alert('prompted')
         console.error('You are in Global scope and can\'t return anything from there')
         return
     }
@@ -135,9 +139,16 @@ function returnToFunction(strArray) {
 
 function printCode() {
     // console.clear()
+    NaNParser()
     console.log(code.join("\n"))
     console.log(`code`, code)
     document.querySelector("#code").innerHTML = code.join("<br />")
+}
+
+function NaNParser() {
+    code = code.map(item => 
+        item.replace(/not a number/g, 'NaN')
+    )
 }
 
 function scopeAssigner(data) {
@@ -169,8 +180,9 @@ function scopeRemover() {
 }
 
 function simpleWordConversions(strArray) {
+    let string = strArray.join(" ")
     switch(true) {
-        case strArray.join(" ").startsWith('console'):
+        case string.startsWith('console'):
             consoling(strArray.slice(1))
             break
     }
