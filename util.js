@@ -1,7 +1,8 @@
-function Function(name) {
+function Function(name, type) {
     this.name = name
     this.body = []
     this.arguments = []
+    this.type = type
     this.builder = function () {
         this.body.unshift(`function ${this.name} (${this.arguments.join(", ")}) {`)
         this.body.push(`}`)

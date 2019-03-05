@@ -14,6 +14,10 @@ let dictated = [
     `close`,
     `console log hello world`,
     `close`,
+    `function is animating`,
+    `return 1`,
+    `close`,
+    `return 5`
 ]
 
 
@@ -55,6 +59,9 @@ function processing(string) {
         case string.startsWith('undo'):
             undo()
             break
+        case string.startsWith('return'):
+            returnToFunction(strArray.slice(1))
+            break
         default: 
             simpleWordConversions(strArray) 
     }
@@ -86,7 +93,7 @@ function declaration(type, strArray) {
 function functionCreator(strArray) {
     console.log(strArray)
     let functionName = methodNameCreator(strArray)
-    let method = new Function(functionName)
+    let method = new Function(functionName, `classic`)
     scope.push(method)
 }
 
@@ -107,8 +114,26 @@ function assignArguments(strArray) {
     }
 }
 
+function returnToFunction(strArray) {
+    if(scope.length == 0) {
+        alert('prompted')
+        console.error('You are in Global scope and can\'t return anything from there')
+        return
+    }
+
+    scope.forEach(item => {
+        
+    })
+    if(scope[scope.length - 1].constructor.name == 'Function') {
+        scopeAssigner('return ' + strArray.join("_"))
+    } else {
+        alert('prompted')
+        console.error('You are in Global scope and can\'t return anything from there')
+    }
+}
+
 function printCode() {
-    console.clear()
+    // console.clear()
     console.log(code.join("\n"))
     console.log(`code`, code)
     document.querySelector("#code").innerHTML = code.join("<br />")
