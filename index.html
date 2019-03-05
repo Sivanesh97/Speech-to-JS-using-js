@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="prism.css">
+    <link rel="stylesheet" href="index.css">
     <title>Document</title>
 </head>
 <body>
-    <h1>Speech color changer</h1>
-    <p>Tap/click then say a color to change the background color of the app.</p>
-    <div>
-        <p class="output"><em>...diagnostic messages</em></p>
-    </div>
+    <h1>Speech to Code Generation</h1>
+    <pre id="code-div">
+        <code class="lang-js" id="code"></code>
+    </pre>
     <script src="speech.js"></script>
     <script src="util.js"></script>
     <script src="js.js"></script>
+    <script src="prism.js"></script>
 </body>
 </html>

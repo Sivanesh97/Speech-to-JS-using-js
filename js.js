@@ -1,35 +1,62 @@
 let code = []
 let scope = []
 
-let dictated =
+let dictated = [
     // `variable person count = 2000` // After let until equals all are concatenated. equals => = type
-    `function is Animating of`
+    `let is Animating = 3`,
+    `variable code = #include<iostream.h>`,
+    `constant pi = 3.14`,
+    `let is clock present = true`,
+    `function color change`,
+    `arguments name id object`,
+    `constant pi = 3.14`,
+    `let is clock present = true`,
+    `close`,
+    `console log hello world`,
+    `close`,
+]
+
+
+
+async function tester() {
+    await dictated.forEach(item => {
+        console.log(item)
+        processing(item)
+    })
+    printCode()    
+}
+
+tester()
 
 
 // The if chain
 function processing(string) {
     string = string.toLowerCase()
     let strArray = string.split(" ")
-    switch (strArray[0]) {
-        case 'let':
+    switch (true) {
+        case string.startsWith('let'):
             declaration(strArray.shift(), strArray)
             break
-        case 'constant':
+        case string.startsWith('constant'):
             declaration('const', strArray.slice(1))
             break
-        case 'variable':
+        case string.startsWith('variable'):
             declaration('var', strArray.slice(1))
             break
-        case `function`:
+        case string.startsWith('function'):
             functionCreator(strArray.slice(1))
             break
-        case `close`: 
+        case string.startsWith('arguments'):
+            assignArguments(strArray.slice(1))
+            break
+        case string.startsWith('close'):
             scopeRemover()
             break
-        case `undo`: 
+        case string.startsWith('undo'):
             undo()
             break
-
+        default: 
+            simpleWordConversions(strArray) 
     }
 }
 
@@ -53,10 +80,11 @@ function declaration(type, strArray) {
     variable = variable.join("_")
     scopeAssigner(`${type} ${variable} = ${assignment}\n`)
     // code.push(`${type} ${variable} = ${assignment}\n`)
-    printCode()
+    // printCode()
 }
 
 function functionCreator(strArray) {
+    console.log(strArray)
     let functionName = methodNameCreator(strArray)
     let method = new Function(functionName)
     scope.push(method)
@@ -71,9 +99,19 @@ function methodNameCreator(strArray) {
     }).join("")
 }
 
+function assignArguments(strArray) {
+    if(scope.length != 0) {
+        scope[scope.length - 1].arguments.push(...strArray)
+    } else {
+        console.error('Already in global scope')
+    }
+}
+
 function printCode() {
+    console.clear()
     console.log(code.join("\n"))
     console.log(`code`, code)
+    document.querySelector("#code").innerHTML = code.join("<br />")
 }
 
 function scopeAssigner(data) {
@@ -83,7 +121,7 @@ function scopeAssigner(data) {
         code.push(data)
     }
 
-    console.log(code.join("\n"))
+    printCode()
 }
 
 function undo() {
@@ -96,7 +134,26 @@ function undo() {
 }
 
 function scopeRemover() {
-    console.warn(`Scope Remover Works`)
-    code.push(scope.pop().builder())
+    if(scope.length != 0) {
+        code.push(scope.pop().builder())
+    } else {
+        console.error('Already in Global scope')
+    }
     printCode()
 }
+
+function simpleWordConversions(strArray) {
+    switch(true) {
+        case strArray.join(" ").startsWith('console'):
+            consoling(strArray.slice(1))
+            break
+    }
+}
+
+function consoling(strArray) {
+    switch(true) {
+        case strArray.join(" ").startsWith('log'):
+            scopeAssigner('console.log(`' + strArray.slice(1).join(" ") + '`)')
+    }
+}
+
