@@ -121,15 +121,16 @@ function returnToFunction(strArray) {
         return
     }
 
-    scope.forEach(item => {
-        
-    })
-    if(scope[scope.length - 1].constructor.name == 'Function') {
-        scopeAssigner('return ' + strArray.join("_"))
-    } else {
-        alert('prompted')
-        console.error('You are in Global scope and can\'t return anything from there')
+    let i 
+    for(i = scope.length - 1; i >= 0; i--) {
+        if(scope[i].constructor.name == 'Function') {
+            scopeAssigner('return ' + strArray.join("_"))
+            return
+        }
     }
+    
+    alert('prompted')
+    console.error('You are in Global scope and can\'t return anything from there')  
 }
 
 function printCode() {
