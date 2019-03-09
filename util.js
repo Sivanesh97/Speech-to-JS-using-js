@@ -27,3 +27,16 @@ function For() {
 For.prototype.toString = function () {
     return this.body.join("\n")
 }
+
+function List(name) {
+    this.name = name
+    this.body = []
+    this.builder = function() {
+        this.body.unshift("[")
+        this.body.push("]")
+    }
+}
+
+List.prototype.toString = function () {
+    return this.body.join(", ")
+}

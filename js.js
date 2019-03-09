@@ -6,6 +6,7 @@ let dictated = [
     `let is Animating = 3`,
     `let exception = not a number`,
     `variable code = #include<iostream.h>`,
+    `operation 5 plus 10 plus 15`,
     `constant pi = 3.14`,
     `let is clock present = true`,
     `function color change`,
@@ -22,7 +23,11 @@ let dictated = [
     `constant pi = 3.14`,
     `return 1`,
     `close`,
-    `return 5`
+    `operation plus minus into by percentage increment decrement equals`,
+    `operation plus equals 12 minus equals 36 into equals by equals percentage equals`,
+    `operation equal to triple equals not equal to not triple equals greater than less than greater than equals less than equals`,
+    `operation and or not`,
+    `operation bitwise and bitwise or bitwise not left shift right shift`
 ]
 
 
@@ -67,6 +72,9 @@ function processing(string) {
         case string.startsWith('return'):
             returnToFunction(strArray.slice(1))
             break
+        case string.startsWith('operation'):
+            operationHandler(strArray.slice(1))
+            break
         default: 
             simpleWordConversions(strArray) 
     }
@@ -78,21 +86,26 @@ function declaration(type, strArray) {
     if (equalsIndex != -1) {
         variable = strArray.slice(0, strArray.indexOf('='))
         assignment = strArray.slice(strArray.indexOf("=") + 1)
-        if(!isNaN(assignment)) {
-            assignment = Number(assignment)
-        } else {
-            if(!(assignment === "true" || assignment === "false")) {
-                // Then it will be String right now
-                assignment = `'${assignment.join(" ")}'`
-            }
-        }
+        assignment = typeDefiner(assignment)
     } else {
         variable = strArray
     }
     variable = variable.join("_")
-    scopeAssigner(`${type} ${variable} = ${assignment}\n`)
-    // code.push(`${type} ${variable} = ${assignment}\n`)
+    scopeAssigner(`${type} ${variable} = ${assignment}`)
+    // code.push(`${type} ${variable} = ${assignment}`)
     // printCode()
+}
+
+function typeDefiner(data) {
+    if (!isNaN(data)) {
+        data = Number(data)
+    } else {
+        if (!(data === "true" || data === "false")) {
+            // Then it will be String right now
+            data = `'${data.join(" ")}'`
+        }
+    }
+    return data
 }
 
 function functionCreator(strArray) {
@@ -133,7 +146,6 @@ function returnToFunction(strArray) {
         }
     }
     
-    alert('prompted')
     console.error('You are in Global scope and can\'t return anything from there')  
 }
 
@@ -142,13 +154,14 @@ function printCode() {
     NaNParser()
     console.log(code.join("\n"))
     console.log(`code`, code)
-    document.querySelector("#code").innerHTML = code.join("<br />")
+    document.querySelector("#code").innerHTML = code.join("\n")
 }
 
 function NaNParser() {
-    code = code.map(item => 
-        item.replace(/not a number/g, 'NaN')
-    )
+    code = code.map(item => { 
+        console.log('item = ', item, typeof item)
+        return item.replace(/not a number/g, 'NaN')
+    })
 }
 
 function scopeAssigner(data) {
@@ -185,6 +198,9 @@ function simpleWordConversions(strArray) {
         case string.startsWith('console'):
             consoling(strArray.slice(1))
             break
+        default: 
+            // the original default
+            scopeAssigner(string)
     }
 }
 
@@ -195,3 +211,45 @@ function consoling(strArray) {
     }
 }
 
+function operationHandler(operation) {
+    let str = operation.join(" ")
+    
+    str = str.replace(/bitwise and/g, '&')
+    str = str.replace(/bitwise or/g, '|')
+    str = str.replace(/bitwise not/g, '~')
+    str = str.replace(/left shift/g, '<<')
+    str = str.replace(/right shift/g, '>>')
+
+    str = str.replace(/and/g, '&&')
+    str = str.replace(/or/g, '||')
+    str = str.replace(/not/g, '!')
+
+
+    str = str.replace(/not triple equals/g, '!==')
+    str = str.replace(/not equal to/g, '!=')
+    str = str.replace(/equal to/g, '==')
+    str = str.replace(/triple equals/g, '===')
+    str = str.replace(/greater than/g, '>')
+    str = str.replace(/less than/g, '<')
+    str = str.replace(/greater than equals/g, '>=')
+    str = str.replace(/less than equals/g, '<=')
+
+
+
+
+    str = str.replace(/plus equals/g, '+=')
+    str = str.replace(/minus equals/g, '-=')
+    str = str.replace(/into equals/g, '*=')
+    str = str.replace(/by equals/g, '/=')
+    str = str.replace(/percentage equals/g, '%=')
+    str = str.replace(/plus/g, '+')
+    str = str.replace(/minus/g, '-')
+    str = str.replace(/into/g, '*')
+    str = str.replace(/by/g, '/')
+    str = str.replace(/equals/g, '=')
+    str = str.replace(/increment/g, '++')
+    str = str.replace(/decrement/g, '--')
+    str = str.replace(/percentage/g, '%')
+
+    scopeAssigner(str)
+}   
