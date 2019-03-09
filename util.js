@@ -52,8 +52,14 @@ function Obj() {
     }
 
     this.builder = function() {
-        this.body = `{ ${this.body.join(", ")} }`
+        this.body = this.body.map(item => `    ${item}`)
+        this.body = `{\n ${this.body.join(", \n")}\n}`
+        return this.toString()
     }
+}
+
+Obj.prototype.toString = function() {
+    return this.body
 }
 
 function MultiLineComment() {

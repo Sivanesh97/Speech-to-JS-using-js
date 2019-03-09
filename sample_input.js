@@ -30,6 +30,7 @@ let dictated = [
     `variable a = list 1 next 2 next 3 next 4`,
     `variable b = list name next string age next 12 next time next true next false`,
     `let d = object is animating = true next name = string sivanesh is in multi verse. next age = 12`,
+    `close`,
     `comment hello world`,
     `comment paragraph`,
     `list `,
@@ -38,5 +39,12 @@ let dictated = [
     `close`,
      `let is Animating = 3`,
      `let is number = not a number`,
-     `object`
+     `object`,
+     `close`,
+     `function clock`,
+     `arguments small tick next big tick next alarm`,
+     `let a = 12`,
+     `let e = object small tick = 5 next big tick = 12`,
+     `close`,
+     `close`,
 ]

@@ -53,6 +53,9 @@ function processing(string) {
         case string.startsWith('comment'):
             comment(strArray.slice(1))
             break
+        case string.startsWith('object'):
+            objectCreator(strArray.slice(1))
+            break
         default: 
             simpleWordConversions(strArray) 
     }
@@ -86,7 +89,7 @@ function typeDefiner(data) {
     } else if (data === "true" || data === "false") {
         return data
     } if(data.startsWith('object')) {
-        objectCreator(data.split(" ").slice(1).join(" "))
+        return objectCreator(data.split(" ").slice(1).join(" "))
     } else {
         return data.split(" ").join("_")
     }
@@ -95,7 +98,7 @@ function typeDefiner(data) {
 function functionCreator(strArray) {
     console.log(strArray)
     let functionName = methodNameCreator(strArray)
-    let method = new Function(functionName, `classic`)
+    let method = new Function(functionName, `function`)
     scope.push(method)
 }
 
@@ -169,8 +172,14 @@ function undo() {
 }
 
 function scopeRemover() {
-    if(scope.length != 0) {
+    if(scope.length == 1) {
+        if(scope[scope.length - 1].type != 'function') {
+            return
+        }
         code.push(scope.pop().builder())
+    } else if(scope.length > 1) {
+        let data = scope.pop().builder()
+        scope[scope.length - 1].body.push(data)
     } else {
         console.error('Already in Global scope')
     }
