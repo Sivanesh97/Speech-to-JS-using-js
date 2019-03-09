@@ -47,6 +47,12 @@ function processing(string) {
         case string.startsWith('operation'):
             operationHandler(strArray.slice(1))
             break
+        case string.startsWith('comment paragraph'):
+            commentCreator(strArray.slice(2))
+            break
+        case string.startsWith('comment'):
+            comment(strArray.slice(1))
+            break
         default: 
             simpleWordConversions(strArray) 
     }
@@ -79,6 +85,8 @@ function typeDefiner(data) {
         return Number(data)
     } else if (data === "true" || data === "false") {
         return data
+    } if(data.startsWith('object')) {
+        objectCreator(data.split(" ").slice(1).join(" "))
     } else {
         return data.split(" ").join("_")
     }
@@ -137,7 +145,6 @@ function printCode() {
 
 function NaNParser() {
     code = code.map(item => { 
-        console.log('item = ', item, typeof item)
         return item.replace(/not_a_number/g, 'NaN')
     })
 }
@@ -231,3 +238,15 @@ function operationHandler(operation) {
 
     scopeAssigner(str)
 }   
+
+function comment(data) {
+    scopeAssigner('// ' + data.join(" "))
+}
+
+function commentCreator(data) {
+    let comment = new MultiLineComment()
+    scope.push(comment)
+    data.forEach(item => {
+        scopeAssigner(item)
+    })
+}

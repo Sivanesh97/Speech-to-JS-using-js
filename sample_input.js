@@ -28,5 +28,15 @@ let dictated = [
     `operation bitwise and bitwise or bitwise not left shift right shift`,
     `list `,
     `variable a = list 1 next 2 next 3 next 4`,
-    `variable b = list name next string age next 12 next time next true next false`
+    `variable b = list name next string age next 12 next time next true next false`,
+    `let d = object is animating = true next name = string sivanesh is in multi verse. next age = 12`,
+    `comment hello world`,
+    `comment paragraph`,
+    `list `,
+    `variable a = list 1 next 2 next 3 next 4`,
+    `variable b = list name next string age next 12 next time next true next false`,
+    `close`,
+     `let is Animating = 3`,
+     `let is number = not a number`,
+     `object`
 ]
