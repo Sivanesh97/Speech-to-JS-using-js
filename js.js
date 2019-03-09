@@ -1,34 +1,6 @@
 let code = []
 let scope = []
 
-let dictated = [
-    // `variable person count = 2000` // After let until equals all are concatenated. equals => = type
-    `let is Animating = 3`,
-    `let exception = not a number`,
-    `variable code = #include<iostream.h>`,
-    `operation 5 plus 10 plus 15`,
-    `constant pi = 3.14`,
-    `let is clock present = true`,
-    `function color change`,
-    `arguments name id object`,
-    `constant pi = 3.14`,
-    `let is clock present = true`,
-    `close`,
-    `console log hello world`,
-    `close`,
-    `function is animating`,
-    `let is Animating = 3`,
-    `let is number = not a number`,
-    `variable code = #include<iostream.h>`,
-    `constant pi = 3.14`,
-    `return 1`,
-    `close`,
-    `operation plus minus into by percentage increment decrement equals`,
-    `operation plus equals 12 minus equals 36 into equals by equals percentage equals`,
-    `operation equal to triple equals not equal to not triple equals greater than less than greater than equals less than equals`,
-    `operation and or not`,
-    `operation bitwise and bitwise or bitwise not left shift right shift`
-]
 
 
 
@@ -86,7 +58,7 @@ function declaration(type, strArray) {
     if (equalsIndex != -1) {
         variable = strArray.slice(0, strArray.indexOf('='))
         assignment = strArray.slice(strArray.indexOf("=") + 1)
-        assignment = typeDefiner(assignment)
+        assignment = typeDefiner(assignment.join(" "))
     } else {
         variable = strArray
     }
@@ -97,15 +69,19 @@ function declaration(type, strArray) {
 }
 
 function typeDefiner(data) {
-    if (!isNaN(data)) {
-        data = Number(data)
+    console.log(typeof data, data)
+    if(typeof data === 'string' && data.startsWith('list')) {
+        data = data.split(" ")
+        return listCreator(data.slice(1))
+    } else if(data.startsWith('string')) {
+        return `'${data.split(" ").slice(1).join(" ")}'`
+    } else if (!isNaN(data)) {
+        return Number(data)
+    } else if (data === "true" || data === "false") {
+        return data
     } else {
-        if (!(data === "true" || data === "false")) {
-            // Then it will be String right now
-            data = `'${data.join(" ")}'`
-        }
+        return data.split(" ").join("_")
     }
-    return data
 }
 
 function functionCreator(strArray) {
@@ -126,7 +102,9 @@ function methodNameCreator(strArray) {
 
 function assignArguments(strArray) {
     if(scope.length != 0) {
-        scope[scope.length - 1].arguments.push(...strArray)
+        let args = strArray.join(" ").split("next")
+        args = args.map(item => item.trim().split(" ").join("_"))
+        scope[scope.length - 1].arguments.push(args)
     } else {
         console.error('Already in global scope')
     }
@@ -160,7 +138,7 @@ function printCode() {
 function NaNParser() {
     code = code.map(item => { 
         console.log('item = ', item, typeof item)
-        return item.replace(/not a number/g, 'NaN')
+        return item.replace(/not_a_number/g, 'NaN')
     })
 }
 
@@ -207,7 +185,7 @@ function simpleWordConversions(strArray) {
 function consoling(strArray) {
     switch(true) {
         case strArray.join(" ").startsWith('log'):
-            scopeAssigner('console.log(`' + strArray.slice(1).join(" ") + '`)')
+            scopeAssigner(`console.log(${typeDefiner(strArray.slice(1).join(" "))})`)
     }
 }
 

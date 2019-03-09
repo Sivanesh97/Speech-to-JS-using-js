@@ -28,15 +28,14 @@ For.prototype.toString = function () {
     return this.body.join("\n")
 }
 
-function List(name) {
-    this.name = name
+function List() {
+    this.name = ''
     this.body = []
     this.builder = function() {
-        this.body.unshift("[")
-        this.body.push("]")
+        this.body = `[${this.body.toString()}]`
     }
 }
 
 List.prototype.toString = function () {
-    return this.body.join(", ")
+    return this.body
 }
