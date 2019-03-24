@@ -71,6 +71,7 @@ function declaration(type, strArray) {
 		variable = strArray.slice(0, strArray.indexOf('='));
 		assignment = strArray.slice(strArray.indexOf('=') + 1);
 		assignment = typeDefiner(assignment.join(' '));
+		console.log('[JS] declaration: assignment', assignment);
 	} else {
 		variable = strArray;
 	}
@@ -85,6 +86,9 @@ function typeDefiner(data) {
 	if (typeof data === 'string' && data.startsWith('list')) {
 		data = data.split(' ');
 		return listCreator(data.slice(1));
+	} else if (data.startsWith('operation')) {
+		data = data.split(' ');
+		return operationHandler(data.slice(1));
 	} else if (data.startsWith('string')) {
 		return `'${data.split(' ').slice(1).join(' ')}'`;
 	} else if (!isNaN(data)) {
@@ -255,7 +259,7 @@ function operationHandler(operation) {
 	str = str.replace(/decrement/g, '--');
 	str = str.replace(/percentage/g, '%');
 
-	scopeAssigner(str);
+	return str;
 }
 
 function comment(data) {
