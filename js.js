@@ -53,7 +53,7 @@ function processing(string) {
 		case string.startsWith('object'):
 			objectCreator(strArray.slice(1));
 			break;
-		case string.startsWith('undo'):
+		case string.startsWith('undo') || string.startsWith('revert'):
 			undo();
 			break;
 		case string.startsWith('clear'):
@@ -126,9 +126,11 @@ function assignArguments(strArray) {
 		let args = strArray.join(' ').split('next');
 		args = args.map((item) => item.trim().split(' ').join('_'));
 		scope[scope.length - 1].arguments.push(args);
+		console.log('[JS] AssignArguments:', args);
 	} else {
 		console.error('Already in global scope');
 	}
+	printCode();
 }
 
 function returnToFunction(strArray) {
@@ -270,6 +272,7 @@ function commentCreator(data) {
 
 function clear() {
 	code = [];
+	scope = [];
 	console.clear();
 	printCode();
 }

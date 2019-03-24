@@ -13,7 +13,7 @@ function Function(name, type) {
 
 Function.prototype.toString = function() {
 	let output = `
-function ${this.name} () {
+function ${this.name} (${this.arguments}) {
     ${this.body.map((item) => '    ' + item).join('\n')}
 }
 `;
@@ -37,14 +37,14 @@ For.prototype.toString = function() {
 function List() {
 	this.name = '';
 	this.body = [];
-	this.builder = function() {
-		this.body = `[${this.body.toString()}]`;
-		this.body = this.body.replace(/,/g, ', ');
-	};
+	// this.builder = function() {
+	// 	this.body = `[${this.body.toString()}]`;
+	// 	this.body = this.body.replace(/,/g, ', ');
+	// };
 }
 
 List.prototype.toString = function() {
-	return this.body;
+	return `[ ${this.body} ]`;
 };
 
 function Obj() {
