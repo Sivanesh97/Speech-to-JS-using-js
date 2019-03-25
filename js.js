@@ -1,15 +1,15 @@
 let code = [];
 let scope = [];
 
-// async function tester() {
-//     await dictated.forEach(item => {
-//         console.log(item)
-//         processing(item)
-//     })
-//     printCode()
-// }
+async function tester() {
+	await dictated.forEach((item) => {
+		console.log(item);
+		processing(item);
+	});
+	printCode();
+}
 
-// tester()
+tester();
 
 // The if chain
 function processing(string) {
@@ -25,6 +25,9 @@ function processing(string) {
 			break;
 		case string.startsWith('variable'):
 			declaration('var', strArray.slice(1));
+			break;
+		case string.indexOf('=') > 0:
+			normalAssignment(string);
 			break;
 		case string.startsWith('function'):
 			functionCreator(strArray.slice(1));
@@ -42,7 +45,7 @@ function processing(string) {
 			returnToFunction(strArray.slice(1));
 			break;
 		case string.startsWith('operation'):
-			operationHandler(strArray.slice(1));
+			operationsParser(strArray.slice(1));
 			break;
 		case string.startsWith('comment paragraph'):
 			commentCreator(strArray.slice(2));
@@ -70,7 +73,7 @@ function declaration(type, strArray) {
 	if (equalsIndex != -1) {
 		variable = strArray.slice(0, strArray.indexOf('='));
 		assignment = strArray.slice(strArray.indexOf('=') + 1);
-		assignment = typeDefiner(assignment.join(' '));
+		assignment = operationsHandler(assignment.join(' '));
 		console.log('[JS] declaration: assignment', assignment);
 	} else {
 		variable = strArray;
@@ -86,12 +89,9 @@ function typeDefiner(data) {
 	if (typeof data === 'string' && data.startsWith('list')) {
 		data = data.split(' ');
 		return listCreator(data.slice(1));
-	} else if (data.startsWith('operation')) {
-		data = data.split(' ');
-		return operationHandler(data.slice(1));
 	} else if (data.startsWith('string')) {
 		return `'${data.split(' ').slice(1).join(' ')}'`;
-	} else if (!isNaN(data)) {
+	} else if (!isNaN(parseInt(data))) {
 		return Number(data);
 	} else if (data === 'true' || data === 'false') {
 		return data;
@@ -101,6 +101,19 @@ function typeDefiner(data) {
 	} else {
 		return data.split(' ').join('_');
 	}
+}
+
+function normalAssignment(string) {
+	let assignment_split = string.split('=');
+	let variable = assignment_split[0];
+	let assignment = assignment_split[1].trim();
+	variable = variable.trim().split(' ').join('_');
+	assignment = operationsHandler(assignment);
+	console.log('[JS] NormalAssignMent: assignment', assignment);
+	alert(variable);
+	alert(assignment);
+	scopeAssigner(`${variable} = ${assignment}`);
+	printCode();
 }
 
 function functionCreator(strArray) {
@@ -223,41 +236,70 @@ function consoling(strArray) {
 	}
 }
 
-function operationHandler(operation) {
+function operationsHandler(string) {
+	let operation_arr = string.split(' ');
+	let variable_stack = [];
+	let final_output = [];
+	operation_arr.forEach((item) => {
+		let operator = operationsParser([ item ]);
+		if (item != operator || item === '+' || item === '-') {
+			if (variable_stack !== 0) {
+				final_output.push(typeDefiner(variable_stack.join(' ')));
+				variable_stack = [];
+			}
+			final_output.push(operator);
+		} else if (isNaN(item)) {
+			// TODO: make true or false boolean types here
+			variable_stack.push(item);
+		} else {
+			if (variable_stack !== 0) {
+				final_output.push(typeDefiner(variable_stack.join(' ')));
+				variable_stack = [];
+			}
+			final_output.push(item);
+		}
+	});
+	if (variable_stack.length !== 0) {
+		final_output.push(typeDefiner(variable_stack.join(' ')));
+	}
+	return final_output.join(' ');
+}
+
+function operationsParser(operation) {
 	let str = operation.join(' ');
 
-	str = str.replace(/bitwise and/g, '&');
-	str = str.replace(/bitwise or/g, '|');
-	str = str.replace(/bitwise not/g, '~');
-	str = str.replace(/left shift/g, '<<');
-	str = str.replace(/right shift/g, '>>');
+	str = str.replace(/^bitwise and$/g, '&');
+	str = str.replace(/^bitwise or$/g, '|');
+	str = str.replace(/^bitwise not$/g, '~');
+	str = str.replace(/^left shift$/g, '<<');
+	str = str.replace(/^right shift$/g, '>>');
 
-	str = str.replace(/and/g, '&&');
-	str = str.replace(/or/g, '||');
-	str = str.replace(/not/g, '!');
+	str = str.replace(/^and$/g, '&&');
+	str = str.replace(/^or$/g, '||');
+	str = str.replace(/^not$/g, '!');
 
-	str = str.replace(/not triple equals/g, '!==');
-	str = str.replace(/not equal to/g, '!=');
-	str = str.replace(/equal to/g, '==');
-	str = str.replace(/triple equals/g, '===');
-	str = str.replace(/greater than/g, '>');
-	str = str.replace(/less than/g, '<');
-	str = str.replace(/greater than equals/g, '>=');
-	str = str.replace(/less than equals/g, '<=');
+	str = str.replace(/^not triple equals$/g, '!==');
+	str = str.replace(/^not equal to$/g, '!=');
+	str = str.replace(/^equal to$/g, '==');
+	str = str.replace(/^triple equals$/g, '===');
+	str = str.replace(/^greater than$/g, '>');
+	str = str.replace(/^less than$/g, '<');
+	str = str.replace(/^greater than equals$/g, '>=');
+	str = str.replace(/^less than equals$/g, '<=');
 
-	str = str.replace(/plus equals/g, '+=');
-	str = str.replace(/minus equals/g, '-=');
-	str = str.replace(/into equals/g, '*=');
-	str = str.replace(/by equals/g, '/=');
-	str = str.replace(/percentage equals/g, '%=');
-	str = str.replace(/plus/g, '+');
-	str = str.replace(/minus/g, '-');
-	str = str.replace(/into/g, '*');
-	str = str.replace(/by/g, '/');
-	str = str.replace(/equals/g, '=');
-	str = str.replace(/increment/g, '++');
-	str = str.replace(/decrement/g, '--');
-	str = str.replace(/percentage/g, '%');
+	str = str.replace(/^plus equals$/g, '+=');
+	str = str.replace(/^minus equals$/g, '-=');
+	str = str.replace(/^into equals$/g, '*=');
+	str = str.replace(/^by equals$/g, '/=');
+	str = str.replace(/^percentage equals$/g, '%=');
+	str = str.replace(/^plus$/g, '+');
+	str = str.replace(/^minus$/g, '-');
+	str = str.replace(/^into$/g, '*');
+	str = str.replace(/^by$/g, '/');
+	str = str.replace(/^equals$/g, '=');
+	str = str.replace(/^increment$/g, '++');
+	str = str.replace(/^decrement$/g, '--');
+	str = str.replace(/^percentage$/g, '%');
 
 	return str;
 }
