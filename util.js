@@ -20,20 +20,6 @@ function ${this.name} (${this.arguments}) {
 	return output;
 };
 
-function For() {
-	this.condition = ``;
-	this.body = [];
-	this.builder = function() {
-		this.body.unshift(`for(${this.condition}) {`);
-		this.body.push(`}`);
-		return this.toString();
-	};
-}
-
-For.prototype.toString = function() {
-	return this.body.join('\n');
-};
-
 function List() {
 	this.name = '';
 	this.body = [];

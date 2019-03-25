@@ -48,5 +48,13 @@ let dictated = [
 	//      `close`,
 	//      `close`,
 	// 'state equals code name plus name standard minus dummy into 24 and 68 string hello world',
-	'let name equals code name plus name standard minus true into false dummy into 24 and 68 string hello world'
+	'let name equals arrow function name plus name standard minus true into false dummy into 24 and 68 string hello world'
+	// 'function function1',
+	// 'let name equals 23',
+	// 'variable age = true',
+	// 'constant name equals string hello world',
+	// 'arguments name next age next d o b',
+	// 'close',
+	// 'let list equals list string a lady next true next 1987 next hello world',
+	// 'let name equals a lady next true next 1987 next hello world'
 ];

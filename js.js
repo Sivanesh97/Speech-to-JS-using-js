@@ -73,7 +73,10 @@ function declaration(type, strArray) {
 	if (equalsIndex != -1) {
 		variable = strArray.slice(0, strArray.indexOf('='));
 		assignment = strArray.slice(strArray.indexOf('=') + 1);
-		assignment = operationsHandler(assignment.join(' '));
+		assignment = predefinedAssignments(assignment);
+		if (strArray === strArray) {
+			assignment = operationsHandler(assignment.join(' '));
+		}
 		console.log('[JS] declaration: assignment', assignment);
 	} else {
 		variable = strArray;
@@ -84,10 +87,27 @@ function declaration(type, strArray) {
 	// printCode()
 }
 
+function predefinedAssignments(strArray) {
+	let string = strArray.join(' ');
+	switch (true) {
+		case string.startsWith('list'):
+			return listCreator(strArray.slice(1));
+		case string.startsWith('object'):
+			return objectCreator(strArray.slice(1));
+		case string.startsWith('function'):
+			return functionCreator(strArray.slice(1));
+		case string.startsWith('arrow function'):
+			return arrowFunctionCreator(strArray.slice(2));
+		default:
+			return strArray;
+	}
+}
+
 function typeDefiner(data) {
 	console.log(typeof data, data);
 	if (typeof data === 'string' && data.startsWith('list')) {
 		data = data.split(' ');
+		alert(`TypeDefiner: ${data}`);
 		return listCreator(data.slice(1));
 	} else if (data.startsWith('string')) {
 		return `'${data.split(' ').slice(1).join(' ')}'`;
