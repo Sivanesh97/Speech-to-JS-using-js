@@ -242,6 +242,7 @@ function operationsHandler(string) {
 	let final_output = [];
 	operation_arr.forEach((item) => {
 		let operator = operationsParser([ item ]);
+		// If some other variable cause troubles in converting through Speech API put those edge cases here.
 		if (item != operator || item === '+' || item === '-') {
 			if (variable_stack !== 0) {
 				final_output.push(typeDefiner(variable_stack.join(' ')));
@@ -249,8 +250,11 @@ function operationsHandler(string) {
 			}
 			final_output.push(operator);
 		} else if (isNaN(item)) {
-			// TODO: make true or false boolean types here
-			variable_stack.push(item);
+			if (item === 'true' || item === 'false') {
+				final_output.push(item); // Boolean
+			} else {
+				variable_stack.push(item); // String
+			}
 		} else {
 			if (variable_stack !== 0) {
 				final_output.push(typeDefiner(variable_stack.join(' ')));

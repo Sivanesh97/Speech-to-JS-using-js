@@ -47,6 +47,6 @@ let dictated = [
 	//      `let e = object small tick = 5 next big tick = 12`,
 	//      `close`,
 	//      `close`,
-	'state equals code name plus name standard minus dummy into 24 and 68 string hello world',
-	'let name equals code name plus name standard minus dummy into 24 and 68 string hello world'
+	// 'state equals code name plus name standard minus dummy into 24 and 68 string hello world',
+	'let name equals code name plus name standard minus true into false dummy into 24 and 68 string hello world'
 ];
