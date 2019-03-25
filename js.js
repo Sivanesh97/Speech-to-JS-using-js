@@ -69,13 +69,16 @@ function processing(string) {
 
 function declaration(type, strArray) {
 	let equalsIndex = strArray.indexOf(`=`);
-	let variable, assignment;
+	let variable, assignment, predefined_assignment;
 	if (equalsIndex != -1) {
 		variable = strArray.slice(0, strArray.indexOf('='));
 		assignment = strArray.slice(strArray.indexOf('=') + 1);
-		assignment = predefinedAssignments(assignment);
-		if (strArray === strArray) {
+		predefined_assignment = predefinedAssignments(assignment);
+		if (assignment === predefined_assignment) {
+			alert('goes inside');
 			assignment = operationsHandler(assignment.join(' '));
+		} else {
+			assignment = predefined_assignment;
 		}
 		console.log('[JS] declaration: assignment', assignment);
 	} else {
