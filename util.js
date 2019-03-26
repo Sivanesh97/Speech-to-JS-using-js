@@ -35,24 +35,35 @@ List.prototype.toString = function() {
 	return `${this.data_type} ${this.name} =  [ ${this.body} ]`;
 };
 
-function Obj() {
-	this.name = '';
+function Obj(data_type, variable, is_inside_object) {
+	this.type = 'object';
+	this.name = variable;
+	this.data_type = data_type;
+	this.is_inside_object = is_inside_object;
 	this.body = [];
-	this.keyValuePair = function(key, value) {
-		key = key.split(' ').join('_');
-		value = typeDefiner(value);
-		this.body.push(`${key}: ${value}`);
-	};
-
-	this.builder = function() {
-		this.body = this.body.map((item) => `    ${item}`);
-		this.body = `{\n ${this.body.join(', \n')}\n}`;
-		return this.toString();
-	};
 }
 
 Obj.prototype.toString = function() {
-	return this.body;
+	let output = [];
+	if (this.is_inside_object) {
+		output.push('\n');
+	}
+
+	if (this.data_type) {
+		output.push(this.data_type);
+	}
+
+	output.push(this.name);
+
+	if (this.is_inside_object) {
+		output.push(':');
+	} else {
+		output.push('=');
+	}
+	output.push('{');
+	output.push(this.body);
+	output.push('\n}');
+	return output.join(' ');
 };
 
 function MultiLineComment() {

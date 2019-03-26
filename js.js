@@ -17,11 +17,32 @@ function processing(string) {
 	string = string.replace(/equals/g, '=');
 	let strArray = string.split(' ');
 
-	if (scope.length !== 0 && scope.slice(-1)[0].type === 'list' && string !== 'close') {
-		let args = string.split('comma');
-		args = args.map((item) => typeDefiner(item.trim()));
-		scopeAssigner(args);
-		return;
+	if (scope.length !== 0 && string !== 'close') {
+		if (scope.slice(-1)[0].type === 'list') {
+			let args = string.split('comma');
+			args = args.map((item) => typeDefiner(item.trim()));
+			scopeAssigner(args);
+			return;
+		}
+
+		if (scope.slice(-1)[0].type === 'object') {
+			strArray = string.split('value');
+			if (strArray.length <= 1) {
+				console.warn('Inside object value must be given as <key> "Value" <value>');
+				return;
+			}
+			let variable = strArray[0].trim().split(' ').join('_');
+			let assignment = typeDefiner(strArray[1].trim(), variable);
+			// alert()
+			if (assignment.type === 'object') {
+				scope.push(assignment);
+				return;
+			}
+			let key_val = `\n${variable}: ${assignment}`;
+			scopeAssigner(key_val);
+
+			return;
+		}
 	}
 
 	switch (true) {
@@ -104,7 +125,7 @@ function predefinedAssignments(type, variable, assignment) {
 		case string.startsWith('list'):
 			return listCreator(type, variable, assignment.slice(1));
 		case string.startsWith('object'):
-			return objectCreator(assignment.slice(1));
+			return objectCreator(type, variable, assignment.slice(1));
 		case string.startsWith('function'):
 			return functionCreator(assignment.slice(1));
 		case string.startsWith('arrow function'):
@@ -115,18 +136,31 @@ function predefinedAssignments(type, variable, assignment) {
 }
 
 function listCreator(type, variable, assignment) {
-	alert(`{listCreator} type = ${type}; variable = ${variable}; assignment = ${assignment}`);
 	let list = new List(type, variable);
 	scopeAssigner(list);
 	scope.push(list);
-	processing(assignment.join(' '));
+	if (assignment) {
+		processing(assignment.join(' '));
+	}
 }
 
-function typeDefiner(data) {
+function objectCreator(type, variable, assignments, is_inside_object) {
+	let obj = new Obj(type, variable, is_inside_object);
+	scopeAssigner(obj);
+	scope.push(obj);
+	return obj;
+}
+
+function objectPusher() {
+	let obj = new Obj(null, null, true);
+	// scope.push(obj);
+	return obj;
+}
+
+function typeDefiner(data, variable) {
 	console.log(typeof data, data);
 	if (typeof data === 'string' && data.startsWith('list')) {
 		data = data.split(' ');
-		alert(`TypeDefiner: ${data}`);
 		return listCreator(data.slice(1));
 	} else if (data.startsWith('string')) {
 		return `'${data.split(' ').slice(1).join(' ')}'`;
@@ -136,7 +170,8 @@ function typeDefiner(data) {
 		return data;
 	}
 	if (data.startsWith('object')) {
-		return objectCreator(data.split(' ').slice(1).join(' '));
+		alert(data + ' ' + variable);
+		return objectCreator(undefined, variable, data.slice(1), true);
 	} else {
 		return data.split(' ').join('_');
 	}
@@ -149,8 +184,6 @@ function normalAssignment(string) {
 	variable = variable.trim().split(' ').join('_');
 	assignment = operationsHandler(assignment);
 	console.log('[JS] NormalAssignMent: assignment', assignment);
-	alert(variable);
-	alert(assignment);
 	scopeAssigner(`${variable} = ${assignment}`);
 	printCode();
 }

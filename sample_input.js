@@ -54,7 +54,6 @@ let dictated = [
 	// 'variable age = true',
 	// 'constant name equals string hello world',
 	// 'close',
-
 	// ARRAY
 	// 'let list equals list string a lady comma true comma 1987 comma hello world',
 	// 'name comma age comma d o b',
@@ -69,6 +68,30 @@ let dictated = [
 	// 'close',
 	// 'print string hello world'
 	// 'let name equals a lady next true next 1987 next hello world',
-	'let list equals list name comma age comma d o birth',
-	'string hello world comma true comma false comma undefined'
+	// 'let name equals 12',
+	// 'let name equals object',
+	// 'name one value string sivanesh',
+	// 'age value 67',
+	// 'date of birth value 1997',
+	// 'is single value true',
+	// 'name value object',
+	// 'first name value string sivanesh',
+	// 'second name value string developer',
+	// // 'close',
+	// 'second name value string developer',
+	// 'another object value object',
+	// 'name value 12',
+	// 'close'
+
+	// Object nesting Checker
+	'let person equals object',
+	'first name value string sivanesh',
+	'age value 21',
+	'is married value false',
+	// Assignments alongside with objects are not handled
+	'attributes value object height value 187',
+	'height value 187',
+	'weight value 87',
+	'close',
+	'let checking equals string does goes out'
 ];
