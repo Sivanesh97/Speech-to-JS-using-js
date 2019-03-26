@@ -87,6 +87,9 @@ let dictated = [
 	'first name value string sivanesh',
 	'age value 21',
 	'is married value false',
+	'array value list',
+	'name comma value comma date',
+	'close',
 	// 'arr value list',
 	// // Assignments alongside with objects are not handled
 	// 'attributes value object height value 187',
@@ -97,8 +100,11 @@ let dictated = [
 	// 'let checking equals string does goes out'
 	'let name equals list hello world comma string hello world',
 	'close',
-	'name equals list hello world comma string hello world'
+	'name equals list hello world comma string hello world',
 	// '1 comma 2 comma 34',
-	// 'close',
-	// 'name equals list hello world comma string hello world'
+	'close',
+	'let name equals object',
+	'object two value object',
+	'arr value list',
+	'name comma age comma dob'
 ];

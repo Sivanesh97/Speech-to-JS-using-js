@@ -34,6 +34,9 @@ function List(data_type, variable, is_inside_object) {
 
 List.prototype.toString = function() {
 	let output = [];
+	if (this.is_inside_object) {
+		output.push('\n');
+	}
 	this.data_type && output.push(this.data_type);
 	this.name && output.push(this.name);
 	if (this.is_inside_object) {

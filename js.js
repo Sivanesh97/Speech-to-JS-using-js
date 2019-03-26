@@ -33,7 +33,9 @@ function processing(string) {
 			}
 			let variable = strArray[0].trim().split(' ').join('_');
 			let assignment = typeDefiner(strArray[1].trim(), variable);
-			// alert()
+			if (!assignment) {
+				return null;
+			}
 			if (assignment && assignment.type === 'object') {
 				return;
 			}
@@ -134,8 +136,8 @@ function predefinedAssignments(type, variable, assignment) {
 	}
 }
 
-function listCreator(type, variable, assignment) {
-	let list = new List(type, variable);
+function listCreator(type, variable, assignment, is_inside_object) {
+	let list = new List(type, variable, is_inside_object);
 	scopeAssigner(list);
 	scope.push(list);
 	if (assignment) {
@@ -150,17 +152,11 @@ function objectCreator(type, variable, assignments, is_inside_object) {
 	return obj;
 }
 
-function objectPusher() {
-	let obj = new Obj(null, null, true);
-	// scope.push(obj);
-	return obj;
-}
-
 function typeDefiner(data, variable) {
 	console.log(typeof data, data);
 	if (typeof data === 'string' && data.startsWith('list')) {
 		data = data.split(' ');
-		return listCreator(data.slice(1));
+		return listCreator(null, variable, undefined, data.slice(1));
 	} else if (data.startsWith('string')) {
 		return `'${data.split(' ').slice(1).join(' ')}'`;
 	} else if (!isNaN(parseInt(data))) {
@@ -169,7 +165,6 @@ function typeDefiner(data, variable) {
 		return data;
 	}
 	if (data.startsWith('object')) {
-		alert(data + ' ' + variable);
 		return objectCreator(undefined, variable, data.slice(1), true);
 	} else {
 		return data.split(' ').join('_');
@@ -181,7 +176,6 @@ function normalAssignment(string) {
 	let variable = assignment_split[0];
 	variable = variable.trim().split(' ').join('_');
 	let assignment = assignment_split[1].trim();
-	alert(assignment);
 	let predefined_assignment = predefinedAssignments(null, variable, assignment.split(' '));
 	if (predefined_assignment === assignment) {
 		assignment = predefined_assignment;
