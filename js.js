@@ -20,8 +20,11 @@ function processing(string) {
 	if (scope.length !== 0 && string !== 'close') {
 		if (scope.slice(-1)[0].type === 'list') {
 			let args = string.split('comma');
-			args = args.map((item) => typeDefiner(item.trim()));
-			scopeAssigner(args);
+			args = args.map((item) => typeDefiner(item.trim(), undefined, false));
+			alert('{processing}', args, typeof args);
+			if (args != '') {
+				scopeAssigner(args);
+			}
 			return;
 		}
 
@@ -32,7 +35,7 @@ function processing(string) {
 				return;
 			}
 			let variable = strArray[0].trim().split(' ').join('_');
-			let assignment = typeDefiner(strArray[1].trim(), variable);
+			let assignment = typeDefiner(strArray[1].trim(), variable, true);
 			if (!assignment) {
 				return null;
 			}
@@ -140,19 +143,24 @@ function listCreator(type, variable, assignment, is_inside_object) {
 	let list = new List(type, variable, is_inside_object);
 	scopeAssigner(list);
 	scope.push(list);
-	if (assignment) {
+
+	if (assignment && assignment != '') {
 		processing(assignment.join(' '));
 	}
 }
 
-function objectCreator(type, variable, assignments, is_inside_object) {
+function objectCreator(type, variable, assignment, is_inside_object) {
 	let obj = new Obj(type, variable, is_inside_object);
 	scopeAssigner(obj);
 	scope.push(obj);
-	return obj;
+	if (assignment && assignment != '') {
+		// alert('{ObjectCreator} ' + assignment);
+		processing(assignment.join(' '));
+	}
+	// return obj;
 }
 
-function typeDefiner(data, variable) {
+function typeDefiner(data, variable, is_inside_object) {
 	console.log(typeof data, data);
 	if (typeof data === 'string' && data.startsWith('list')) {
 		data = data.split(' ');
@@ -165,7 +173,12 @@ function typeDefiner(data, variable) {
 		return data;
 	}
 	if (data.startsWith('object')) {
-		return objectCreator(undefined, variable, data.slice(1), true);
+		if (typeof data == 'string') {
+			data = null;
+		} else {
+			data = data.slice(1);
+		}
+		return objectCreator(undefined, variable, data, is_inside_object);
 	} else {
 		return data.split(' ').join('_');
 	}
@@ -256,6 +269,7 @@ function NaNParser() {
 }
 
 function scopeAssigner(data) {
+	alert('{ScopeAssigner} ' + data);
 	if (scope.length > 0) {
 		scope[scope.length - 1].body.push(data);
 	} else {

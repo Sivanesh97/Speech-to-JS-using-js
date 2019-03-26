@@ -71,7 +71,7 @@ Obj.prototype.toString = function() {
 	if (this.is_inside_object) {
 		output.push(':');
 	} else {
-		output.push('=');
+		if (this.variable) output.push('=');
 	}
 	output.push('{');
 	output.push(this.body);

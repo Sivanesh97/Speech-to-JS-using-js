@@ -82,29 +82,34 @@ let dictated = [
 	// 'another object value object',
 	// 'name value 12',
 	// 'close'
+
 	// Object nesting Checker
-	'person equals object',
-	'first name value string sivanesh',
-	'age value 21',
-	'is married value false',
-	'array value list',
-	'name comma value comma date',
-	'close',
+	// 'person equals object',
+	// 'first name value string sivanesh',
+	// 'age value 21',
+	// 'is married value false',
+	// 'array value object',
+	// 'array value list',
+	// 'name comma value comma date',
+	// 'close',
+	// 'close',
+	// 'close',
+
 	// 'arr value list',
 	// // Assignments alongside with objects are not handled
 	// 'attributes value object height value 187',
 	// 'height value 187',
 	// 'weight value 87',
-	'close',
 	// 'close',
-	// 'let checking equals string does goes out'
-	'let name equals list hello world comma string hello world',
+	'let checking equals string does goes out',
+	'let name equals 12 plus name args',
+	'let name equals list object',
+	'name value 100',
+	'hundred value 100',
 	'close',
-	'name equals list hello world comma string hello world',
-	// '1 comma 2 comma 34',
-	'close',
-	'let name equals object',
-	'object two value object',
-	'arr value list name comma age comma dob',
-	'name comma age comma dob'
+	'object',
+	'try two value object',
+	'name value string sivanesh',
+	'hobbies value list string one comma string two'
+	// 'let name equals list one comma tow next comma 12 comma true'
 ];
