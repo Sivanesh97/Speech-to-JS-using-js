@@ -35,7 +35,6 @@ function processing(string) {
 			let assignment = typeDefiner(strArray[1].trim(), variable);
 			// alert()
 			if (assignment.type === 'object') {
-				scope.push(assignment);
 				return;
 			}
 			let key_val = `\n${variable}: ${assignment}`;

@@ -93,5 +93,6 @@ let dictated = [
 	'height value 187',
 	'weight value 87',
 	'close',
+	'close',
 	'let checking equals string does goes out'
 ];
