@@ -105,6 +105,6 @@ let dictated = [
 	'close',
 	'let name equals object',
 	'object two value object',
-	'arr value list',
+	'arr value list name comma age comma dob',
 	'name comma age comma dob'
 ];

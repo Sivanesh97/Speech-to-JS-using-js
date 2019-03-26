@@ -156,7 +156,7 @@ function typeDefiner(data, variable) {
 	console.log(typeof data, data);
 	if (typeof data === 'string' && data.startsWith('list')) {
 		data = data.split(' ');
-		return listCreator(null, variable, undefined, data.slice(1));
+		return listCreator(null, variable, data.slice(1), data.slice(1));
 	} else if (data.startsWith('string')) {
 		return `'${data.split(' ').slice(1).join(' ')}'`;
 	} else if (!isNaN(parseInt(data))) {
