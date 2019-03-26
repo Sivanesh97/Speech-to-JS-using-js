@@ -20,11 +20,12 @@ function ${this.name} (${this.arguments}) {
 	return output;
 };
 
-function List(data_type, variable) {
+function List(data_type, variable, is_inside_object) {
 	this.data_type = data_type;
 	this.name = variable;
 	this.body = [];
 	this.type = 'list';
+	this.is_inside_object = is_inside_object;
 	// this.builder = function() {
 	// 	this.body = `[${this.body.toString()}]`;
 	// 	this.body = this.body.replace(/,/g, ', ');
@@ -32,7 +33,16 @@ function List(data_type, variable) {
 }
 
 List.prototype.toString = function() {
-	return `${this.data_type} ${this.name} =  [ ${this.body} ]`;
+	let output = [];
+	this.data_type && output.push(this.data_type);
+	this.name && output.push(this.name);
+	if (this.is_inside_object) {
+		output.push(':');
+	} else {
+		if (this.data_type || this.name) output.push('=');
+	}
+	output.push(`[ ${this.body} ]`);
+	return output.join(' ');
 };
 
 function Obj(data_type, variable, is_inside_object) {

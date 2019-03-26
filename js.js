@@ -34,7 +34,7 @@ function processing(string) {
 			let variable = strArray[0].trim().split(' ').join('_');
 			let assignment = typeDefiner(strArray[1].trim(), variable);
 			// alert()
-			if (assignment.type === 'object') {
+			if (assignment && assignment.type === 'object') {
 				return;
 			}
 			let key_val = `\n${variable}: ${assignment}`;
@@ -179,8 +179,15 @@ function typeDefiner(data, variable) {
 function normalAssignment(string) {
 	let assignment_split = string.split('=');
 	let variable = assignment_split[0];
-	let assignment = assignment_split[1].trim();
 	variable = variable.trim().split(' ').join('_');
+	let assignment = assignment_split[1].trim();
+	alert(assignment);
+	let predefined_assignment = predefinedAssignments(null, variable, assignment.split(' '));
+	if (predefined_assignment === assignment) {
+		assignment = predefined_assignment;
+	} else {
+		return;
+	}
 	assignment = operationsHandler(assignment);
 	console.log('[JS] NormalAssignMent: assignment', assignment);
 	scopeAssigner(`${variable} = ${assignment}`);
