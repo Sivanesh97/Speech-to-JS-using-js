@@ -20,9 +20,11 @@ function ${this.name} (${this.arguments}) {
 	return output;
 };
 
-function List() {
-	this.name = '';
+function List(data_type, variable) {
+	this.data_type = data_type;
+	this.name = variable;
 	this.body = [];
+	this.type = 'list';
 	// this.builder = function() {
 	// 	this.body = `[${this.body.toString()}]`;
 	// 	this.body = this.body.replace(/,/g, ', ');
@@ -30,7 +32,7 @@ function List() {
 }
 
 List.prototype.toString = function() {
-	return `[ ${this.body} ]`;
+	return `${this.data_type} ${this.name} =  [ ${this.body} ]`;
 };
 
 function Obj() {

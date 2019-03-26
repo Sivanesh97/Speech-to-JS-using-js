@@ -16,6 +16,14 @@ function processing(string) {
 	string = string.toLowerCase();
 	string = string.replace(/equals/g, '=');
 	let strArray = string.split(' ');
+
+	if (scope.length !== 0 && scope.slice(-1)[0].type === 'list' && string !== 'close') {
+		let args = string.split('comma');
+		args = args.map((item) => typeDefiner(item.trim()));
+		scopeAssigner(args);
+		return;
+	}
+
 	switch (true) {
 		case string.startsWith('let'):
 			declaration(strArray.shift(), strArray);
@@ -73,12 +81,12 @@ function declaration(type, strArray) {
 	if (equalsIndex != -1) {
 		variable = strArray.slice(0, strArray.indexOf('='));
 		assignment = strArray.slice(strArray.indexOf('=') + 1);
-		predefined_assignment = predefinedAssignments(assignment);
+		predefined_assignment = predefinedAssignments(type, variable, assignment);
 		if (assignment === predefined_assignment) {
-			alert('goes inside');
 			assignment = operationsHandler(assignment.join(' '));
 		} else {
-			assignment = predefined_assignment;
+			// assignment = predefined_assignment;
+			return;
 		}
 		console.log('[JS] declaration: assignment', assignment);
 	} else {
@@ -90,20 +98,28 @@ function declaration(type, strArray) {
 	// printCode()
 }
 
-function predefinedAssignments(strArray) {
-	let string = strArray.join(' ');
+function predefinedAssignments(type, variable, assignment) {
+	let string = assignment.join(' ');
 	switch (true) {
 		case string.startsWith('list'):
-			return listCreator(strArray.slice(1));
+			return listCreator(type, variable, assignment.slice(1));
 		case string.startsWith('object'):
-			return objectCreator(strArray.slice(1));
+			return objectCreator(assignment.slice(1));
 		case string.startsWith('function'):
-			return functionCreator(strArray.slice(1));
+			return functionCreator(assignment.slice(1));
 		case string.startsWith('arrow function'):
-			return arrowFunctionCreator(strArray.slice(2));
+			return arrowFunctionCreator(assignment.slice(2));
 		default:
-			return strArray;
+			return assignment;
 	}
+}
+
+function listCreator(type, variable, assignment) {
+	alert(`{listCreator} type = ${type}; variable = ${variable}; assignment = ${assignment}`);
+	let list = new List(type, variable);
+	scopeAssigner(list);
+	scope.push(list);
+	processing(assignment.join(' '));
 }
 
 function typeDefiner(data) {
@@ -229,11 +245,13 @@ function undo() {
 
 function scopeRemover() {
 	if (scope.length > 0) {
-		if (scope[scope.length - 1].type != 'function') {
-			return;
-		}
-		let function_data = scope.pop();
-		console.log('[JS] ScopeRemover: ', function_data);
+		// if (scope[scope.length - 1].type != 'function') {
+		// 	scope.pop();
+		// 	return;
+		// }
+		// let function_data = scope.pop();
+		// console.log('[JS] ScopeRemover: ', function_data);
+		scope.pop();
 	} else {
 		console.error('Already in Global scope');
 	}
