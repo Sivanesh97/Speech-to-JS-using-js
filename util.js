@@ -2,7 +2,7 @@ function Function(name, type) {
 	this.name = name;
 	this.body = [];
 	this.arguments = [];
-	this.type = type;
+	this.type = 'function';
 	// this.builder = function () {
 	//     this.body = this.body.map(item => `    ${item}`)
 	//     this.body.unshift(`function ${this.name} (${this.arguments.join(", ")}) {`)
@@ -71,11 +71,46 @@ Obj.prototype.toString = function() {
 	if (this.is_inside_object) {
 		output.push(':');
 	} else {
-		if (this.variable) output.push('=');
+		if (this.name) output.push('=');
 	}
 	output.push('{');
 	output.push(this.body);
 	output.push('\n}');
+	return output.join(' ');
+};
+
+function ArrowFunction(data_type, variable, is_inside_object) {
+	// alert(`{arrowFunction} data = ${data_type}; varaible = ${variable}; is_inside_object = ${is_inside_object}`);
+	this.name = variable;
+	this.data_type = data_type;
+	this.is_inside_object = is_inside_object;
+	this.body = [];
+	this.arguments = [];
+	this.type = 'function';
+}
+
+ArrowFunction.prototype.toString = function() {
+	let output = [];
+
+	if (this.is_inside_object) {
+		output.push('\n');
+	}
+
+	if (this.data_type) {
+		output.push(this.data_type);
+	}
+
+	output.push(this.name);
+
+	if (this.is_inside_object) {
+		output.push(':');
+	} else {
+		if (this.name) output.push('=');
+	}
+
+	output.push(`(${this.arguments}) => {
+		${this.body.join('\n')}
+	}`);
 	return output.join(' ');
 };
 

@@ -21,7 +21,6 @@ function processing(string) {
 		if (scope.slice(-1)[0].type === 'list') {
 			let args = string.split('comma');
 			args = args.map((item) => typeDefiner(item.trim(), undefined, false));
-			alert('{processing}', args, typeof args);
 			if (args != '') {
 				scopeAssigner(args);
 			}
@@ -105,6 +104,7 @@ function declaration(type, strArray) {
 	let variable, assignment, predefined_assignment;
 	if (equalsIndex != -1) {
 		variable = strArray.slice(0, strArray.indexOf('='));
+		variable = variable.join('_');
 		assignment = strArray.slice(strArray.indexOf('=') + 1);
 		predefined_assignment = predefinedAssignments(type, variable, assignment);
 		if (assignment === predefined_assignment) {
@@ -116,8 +116,8 @@ function declaration(type, strArray) {
 		console.log('[JS] declaration: assignment', assignment);
 	} else {
 		variable = strArray;
+		variable = variable.join('_');
 	}
-	variable = variable.join('_');
 	scopeAssigner(`${type} ${variable} = ${assignment}`);
 	// code.push(`${type} ${variable} = ${assignment}`)
 	// printCode()
@@ -133,7 +133,7 @@ function predefinedAssignments(type, variable, assignment) {
 		case string.startsWith('function'):
 			return functionCreator(assignment.slice(1));
 		case string.startsWith('arrow function'):
-			return arrowFunctionCreator(assignment.slice(2));
+			return arrowFunctionCreator(type, variable, assignment.slice(2), false);
 		default:
 			return assignment;
 	}
@@ -154,13 +154,22 @@ function objectCreator(type, variable, assignment, is_inside_object) {
 	scopeAssigner(obj);
 	scope.push(obj);
 	if (assignment && assignment != '') {
-		// alert('{ObjectCreator} ' + assignment);
 		processing(assignment.join(' '));
 	}
 	// return obj;
 }
 
+function arrowFunctionCreator(type, variable, assignment, is_inside_object) {
+	// alert(
+	// 	`{arrowFunctionCreator} type=${type}; variable = ${variable}; assignment = ${assignment}; is_inside = ${is_inside_object}`
+	// );
+	let arrow_function = new ArrowFunction(type, variable, is_inside_object);
+	scopeAssigner(arrow_function);
+	scope.push(arrow_function);
+}
+
 function typeDefiner(data, variable, is_inside_object) {
+	alert(`{typeDefiner} data = ${data}; variable = ${variable}; is_inside = ${is_inside_object}`);
 	console.log(typeof data, data);
 	if (typeof data === 'string' && data.startsWith('list')) {
 		data = data.split(' ');
@@ -179,6 +188,9 @@ function typeDefiner(data, variable, is_inside_object) {
 			data = data.slice(1);
 		}
 		return objectCreator(undefined, variable, data, is_inside_object);
+	} else if (data.startsWith('arrow function')) {
+		// TODO check and validate data and send to further arguments
+		return arrowFunctionCreator(undefined, variable, undefined, is_inside_object);
 	} else {
 		return data.split(' ').join('_');
 	}
@@ -190,12 +202,13 @@ function normalAssignment(string) {
 	variable = variable.trim().split(' ').join('_');
 	let assignment = assignment_split[1].trim();
 	let predefined_assignment = predefinedAssignments(null, variable, assignment.split(' '));
-	if (predefined_assignment === assignment) {
+	if (predefined_assignment && predefined_assignment.join(' ') === assignment) {
 		assignment = predefined_assignment;
 	} else {
 		return;
 	}
-	assignment = operationsHandler(assignment);
+	alert('taada normalAssignment ' + assignment);
+	assignment = operationsHandler(assignment.join(' '));
 	console.log('[JS] NormalAssignMent: assignment', assignment);
 	scopeAssigner(`${variable} = ${assignment}`);
 	printCode();
@@ -225,7 +238,7 @@ function methodNameCreator(strArray) {
 
 function assignArguments(strArray) {
 	if (scope.length != 0) {
-		let args = strArray.join(' ').split('next');
+		let args = strArray.join(' ').split('comma');
 		args = args.map((item) => item.trim().split(' ').join('_'));
 		scope[scope.length - 1].arguments.push(args);
 		console.log('[JS] AssignArguments:', args);
@@ -243,7 +256,7 @@ function returnToFunction(strArray) {
 
 	let i;
 	for (i = scope.length - 1; i >= 0; i--) {
-		if (scope[i].constructor.name == 'Function') {
+		if (scope[i].type == 'function') {
 			scopeAssigner('return ' + strArray.join('_'));
 			return;
 		}
@@ -269,7 +282,6 @@ function NaNParser() {
 }
 
 function scopeAssigner(data) {
-	alert('{ScopeAssigner} ' + data);
 	if (scope.length > 0) {
 		scope[scope.length - 1].body.push(data);
 	} else {
