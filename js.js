@@ -15,6 +15,7 @@ tester();
 function processing(string) {
 	string = string.toLowerCase();
 	string = string.replace(/equals/g, '=');
+	string = string.replace(/dot/g, '.');
 	let strArray = string.split(' ');
 
 	if (scope.length !== 0 && string !== 'close') {
@@ -50,6 +51,9 @@ function processing(string) {
 	}
 
 	switch (true) {
+		case string.indexOf('.') !== -1:
+			objectMethodCall(string);
+			break;
 		case string.startsWith('let'):
 			declaration(strArray.shift(), strArray);
 			break;
@@ -409,6 +413,58 @@ function operationsParser(operation) {
 	str = str.replace(/^percentage$/g, '%');
 
 	return str;
+}
+
+function objectMethodCall(string) {
+	let output = '';
+	let str_array = string.split('=');
+	switch (true) {
+		case str_array[0].startsWith('let'):
+			output = 'let ';
+			break;
+		case str_array[0].startsWith('constant'):
+			output = 'const ';
+			break;
+		case str_array[0].startsWith('variable'):
+			output = 'var ';
+			break;
+	}
+
+	// For normal assignment
+	let isDeclarationPresent = output.length > 0;
+	let variable = str_array[0].trim().split(' ').slice(isDeclarationPresent ? 1 : 0).join('_');
+	output = output.concat(`${variable} = `);
+	str_array = str_array[1];
+	// alert(str_array);
+
+	str_array = str_array.split('.');
+	let variable_name = str_array[0].trim();
+	variable_name = variable_name.split(' ').join('_');
+
+	str_array = str_array[1].trim().split('of');
+	let method_name = str_array[0].trim();
+	method_name = methodNameCreator(method_name.split(' '));
+	method_name = method_name.replace(/character/g, 'char');
+	// Exclusion Black List
+	switch (true) {
+		case method_name === 'length':
+			scopeAssigner(`${variable_name}.${method_name}`);
+			return;
+		case method_name.startsWith('index') || method_name.startsWith('lastIndex'):
+			method_name += 'Of';
+			break;
+	}
+
+	if (string.indexOf('of') === -1) {
+		output = `${variable_name}.${method_name}()`;
+	} else {
+		let args = str_array[1].trim();
+		args = args.split('comma');
+		args = args.map((item) => typeDefiner(item.trim()));
+		output += `${variable_name}.${method_name}(${args})`;
+	}
+	// alert(`{objecttMethodCall} variable = ${variable_name}; method = ${method_name}; args = ${args}`);
+	scopeAssigner(output);
 }
 
 function comment(data) {
