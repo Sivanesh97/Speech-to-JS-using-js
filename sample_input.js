@@ -17,11 +17,19 @@ let dictated = [
 	// // 'hobbies value list string cricket comma batminton comma true comma object',
 	// 'close',
 	// 'close'
-	'let name equals list 1 comma two',
-	'object try value string workd',
-	'name world value 12',
+	// 'let name equals list 1 comma two',
+	// 'object try value string workd',
+	// 'name world value 12',
+	// 'close',
+	// '12 comma string right',
+	// 'close',
+	// 'constant name equals arrow function'
+	'comment its a comment',
+	'let name equals 76',
+	'comment paragraph',
+	'let name equals 76',
+	'hello world',
+	'here its gonna be very big comment',
 	'close',
-	'12 comma string right',
-	'close',
-	'constant name equals arrow function'
+	'let name equals string a'
 ];

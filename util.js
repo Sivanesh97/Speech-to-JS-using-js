@@ -116,14 +116,11 @@ ArrowFunction.prototype.toString = function() {
 
 function MultiLineComment() {
 	this.body = [];
-	this.builder = function() {
-		this.body = `/*
-    ${this.body.join('\n')}
-*/`;
-		return this.toString();
-	};
+	this.type = 'comment';
 }
 
 MultiLineComment.prototype.toString = function() {
-	return this.body;
+	return `/*
+${this.body.join('\n')}
+*/`;
 };

@@ -25,9 +25,7 @@ function processing(string) {
 				scopeAssigner(args);
 			}
 			return;
-		}
-
-		if (scope.slice(-1)[0].type === 'object') {
+		} else if (scope.slice(-1)[0].type === 'object') {
 			strArray = string.split('value');
 			if (strArray.length <= 1) {
 				console.warn('Inside object value must be given as <key> "Value" <value>');
@@ -44,6 +42,9 @@ function processing(string) {
 			let key_val = `\n${variable}: ${assignment}`;
 			scopeAssigner(key_val);
 
+			return;
+		} else if (scope.slice(-1)[0].type === 'comment') {
+			scopeAssigner(string);
 			return;
 		}
 	}
@@ -169,7 +170,7 @@ function arrowFunctionCreator(type, variable, assignment, is_inside_object) {
 }
 
 function typeDefiner(data, variable, is_inside_object) {
-	alert(`{typeDefiner} data = ${data}; variable = ${variable}; is_inside = ${is_inside_object}`);
+	// alert(`{typeDefiner} data = ${data}; variable = ${variable}; is_inside = ${is_inside_object}`);
 	console.log(typeof data, data);
 	if (typeof data === 'string' && data.startsWith('list')) {
 		data = data.split(' ');
@@ -207,7 +208,6 @@ function normalAssignment(string) {
 	} else {
 		return;
 	}
-	alert('taada normalAssignment ' + assignment);
 	assignment = operationsHandler(assignment.join(' '));
 	console.log('[JS] NormalAssignMent: assignment', assignment);
 	scopeAssigner(`${variable} = ${assignment}`);
@@ -413,8 +413,10 @@ function comment(data) {
 }
 
 function commentCreator(data) {
+	alert('comment creator' + data);
 	let comment = new MultiLineComment();
 	scope.push(comment);
+	code.push(comment);
 	data.forEach((item) => {
 		scopeAssigner(item);
 	});
