@@ -95,6 +95,9 @@ function processing(string) {
 		case string.startsWith('clear'):
 			clear();
 			break;
+		case string.startsWith('print'):
+			printer(strArray.slice(1));
+			break;
 		default:
 			simpleWordConversions(strArray);
 	}
@@ -427,4 +430,9 @@ function clear() {
 	scope = [];
 	console.clear();
 	printCode();
+}
+
+function printer(strArray) {
+	let output = `document.write(${typeDefiner(strArray.join(' '))})`;
+	scopeAssigner(output);
 }

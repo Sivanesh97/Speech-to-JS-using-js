@@ -24,12 +24,19 @@ let dictated = [
 	// '12 comma string right',
 	// 'close',
 	// 'constant name equals arrow function'
-	'comment its a comment',
-	'let name equals 76',
-	'comment paragraph',
-	'let name equals 76',
-	'hello world',
-	'here its gonna be very big comment',
-	'close',
-	'let name equals string a'
+	// 'comment its a comment',
+	// 'let name equals 76',
+	// 'comment paragraph',
+	// 'let name equals 76',
+	// 'hello world',
+	// 'here its gonna be very big comment',
+	// 'close',
+	// 'let name equals string a'
+
+	'print string hello world',
+	'print 12',
+	'print true',
+	'print false',
+	'let name equals arrow function',
+	'print new'
 ];
