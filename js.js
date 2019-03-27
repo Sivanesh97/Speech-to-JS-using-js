@@ -102,6 +102,9 @@ function processing(string) {
 		case string.startsWith('print'):
 			printer(strArray.slice(1));
 			break;
+		case string.startsWith('call'):
+			call(strArray.slice(1));
+			break;
 		default:
 			simpleWordConversions(strArray);
 	}
@@ -465,6 +468,15 @@ function objectMethodCall(string) {
 	}
 	// alert(`{objecttMethodCall} variable = ${variable_name}; method = ${method_name}; args = ${args}`);
 	scopeAssigner(output);
+}
+
+function call(array) {
+	let index_of = array.indexOf('of');
+	let method_name = array.slice(0, index_of);
+	method_name = methodNameCreator(method_name);
+	let args = array.slice(index_of + 1);
+	args = args.join(' ').split('comma').map((item) => typeDefiner(item.trim()));
+	scopeAssigner(`${method_name}(${args})`)
 }
 
 function comment(data) {

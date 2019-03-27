@@ -37,13 +37,18 @@ let dictated = [
 	// 'print 12',
 	// 'print true',
 	// 'print false',
-	'let name equals string hello world',
+	// 'let name equals string hello world',
 	// 'variable name dot substring of string new comma 123',
 	// 'string dot char code at',
 	// 'string dot length',
 	// 'string dot index of string is',
-	'name one equals string dot last index of string is',
-	'name two equals string dot character code at of 0',
-	'constant name three equals string dot character at of 0',
-	'variable name vada equals string dot to lower case of'
+	// 'let name equals arrow function',
+	// 'name one equals string dot last index of string is',
+	// 'name two equals string dot character code at of 0',
+	// 'constant name three equals string dot character at of 0',
+	// 'variable name vada equals string dot to lower case of',
+	'function method one',
+	'print string hello world',
+	'close',
+	'call method one of true comma 2 comma string hello world'
 ];
