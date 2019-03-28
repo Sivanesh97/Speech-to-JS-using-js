@@ -50,5 +50,9 @@ let dictated = [
 	'function method one',
 	'print string hello world',
 	'close',
-	'call method one of true comma 2 comma string hello world'
+	'call method one of true comma 2 comma string hello world',
+	'let age equals a b equal to 27 minus equal to string hello triple equal to name bitwise and a plus ageplus',
+	'let age equals 1 bitwise and 2',
+	'let age equals 1 triple equal to name'
+	// 'let name equals 5 plus name minus as'
 ];

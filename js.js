@@ -93,6 +93,30 @@ function processing(string) {
 		case string.startsWith('object'):
 			objectCreator(strArray.slice(1));
 			break;
+		case string.startsWith('if'):
+			conditionalCreator(`if`, strArray.slice(1));
+			break;
+		case string.startsWith('else if'):
+			conditionalCreator(`else if`, strArray.slice(2));
+			break;
+		case string.startsWith('else'):
+			conditionalCreator(`else`, strArray.slice(1));
+			break;
+		case string.startsWith('while'):
+			conditionalCreator(`while`, strArray.slice(1));
+			break;
+		case string.startsWith('do while'):
+			conditionalCreator(`do while`, strArray.slice(2));
+			break;
+		case string.startsWith('switch'):
+			conditionalCreator(`switch`, strArray.slice(1));
+			break;
+		case string.startsWith('case'):
+			conditionalCreator(`case`, strArray.slice(1));
+			break;
+		case string.startsWith(`default`):
+			conditionalCreator(`default`);
+			break;
 		case string.startsWith('undo') || string.startsWith('revert'):
 			undo();
 			break;
@@ -347,30 +371,24 @@ function consoling(strArray) {
 }
 
 function operationsHandler(string) {
-	let operation_arr = string.split(' ');
+	let operation_arr = operationsParser(string.split(' '));
+	operation_arr = operation_arr.split(' ');
 	let variable_stack = [];
 	let final_output = [];
+
+	alert(operation_arr);
+
 	operation_arr.forEach((item) => {
-		let operator = operationsParser([ item ]);
-		// If some other variable cause troubles in converting through Speech API put those edge cases here.
-		if (item != operator || item === '+' || item === '-') {
-			if (variable_stack !== 0) {
-				final_output.push(typeDefiner(variable_stack.join(' ')));
-				variable_stack = [];
-			}
-			final_output.push(operator);
-		} else if (isNaN(item)) {
-			if (item === 'true' || item === 'false') {
-				final_output.push(item); // Boolean
-			} else {
-				variable_stack.push(item); // String
-			}
+		if (item.match(/[a-zA-Z]+/)) {
+			variable_stack.push(item);
 		} else {
-			if (variable_stack !== 0) {
-				final_output.push(typeDefiner(variable_stack.join(' ')));
-				variable_stack = [];
+			final_output.push(typeDefiner(variable_stack.join(' ')));
+			variable_stack = [];
+			if (item.match(/^[0-9\.]+$/)) {
+				final_output.push(item);
+			} else {
+				final_output.push(item);
 			}
-			final_output.push(item);
 		}
 	});
 	if (variable_stack.length !== 0) {
@@ -382,38 +400,39 @@ function operationsHandler(string) {
 function operationsParser(operation) {
 	let str = operation.join(' ');
 
-	str = str.replace(/^bitwise and$/g, '&');
-	str = str.replace(/^bitwise or$/g, '|');
-	str = str.replace(/^bitwise not$/g, '~');
-	str = str.replace(/^left shift$/g, '<<');
-	str = str.replace(/^right shift$/g, '>>');
+	str = str.replace(/bitwise and/g, '&');
+	str = str.replace(/bitwise or/g, '|');
+	str = str.replace(/bitwise not/g, '~');
+	str = str.replace(/left shift/g, '<<');
+	str = str.replace(/right shift/g, '>>');
 
-	str = str.replace(/^and$/g, '&&');
-	str = str.replace(/^or$/g, '||');
-	str = str.replace(/^not$/g, '!');
+	str = str.replace(/ and /g, ' && ');
+	str = str.replace(/ or /g, ' || ');
+	str = str.replace(/ not /g, ' ! ');
 
-	str = str.replace(/^not triple equals$/g, '!==');
-	str = str.replace(/^not equal to$/g, '!=');
-	str = str.replace(/^equal to$/g, '==');
-	str = str.replace(/^triple equals$/g, '===');
-	str = str.replace(/^greater than$/g, '>');
-	str = str.replace(/^less than$/g, '<');
-	str = str.replace(/^greater than equals$/g, '>=');
-	str = str.replace(/^less than equals$/g, '<=');
+	str = str.replace(/plus equal to/g, '+=');
+	str = str.replace(/minus equal to/g, '-=');
+	str = str.replace(/into equal to/g, '*=');
+	str = str.replace(/by equal to/g, '/=');
+	str = str.replace(/percentage equal to/g, '%=');
 
-	str = str.replace(/^plus equals$/g, '+=');
-	str = str.replace(/^minus equals$/g, '-=');
-	str = str.replace(/^into equals$/g, '*=');
-	str = str.replace(/^by equals$/g, '/=');
-	str = str.replace(/^percentage equals$/g, '%=');
-	str = str.replace(/^plus$/g, '+');
-	str = str.replace(/^minus$/g, '-');
-	str = str.replace(/^into$/g, '*');
-	str = str.replace(/^by$/g, '/');
-	str = str.replace(/^equals$/g, '=');
-	str = str.replace(/^increment$/g, '++');
-	str = str.replace(/^decrement$/g, '--');
-	str = str.replace(/^percentage$/g, '%');
+	str = str.replace(/not triple equal to/g, '!==');
+	str = str.replace(/not equal to/g, '!=');
+	str = str.replace(/triple equal to/g, '===');
+	str = str.replace(/equal to/g, '==');
+	str = str.replace(/greater than/g, '>');
+	str = str.replace(/less than/g, '<');
+	str = str.replace(/greater than equal to/g, '>=');
+	str = str.replace(/less than equal to/g, '<=');
+
+	str = str.replace(/ plus /g, ' + ');
+	str = str.replace(/ minus /g, ' - ');
+	str = str.replace(/ into /g, ' * ');
+	str = str.replace(/ by /g, ' / ');
+	str = str.replace(/ equal to /g, ' = ');
+	str = str.replace(/ increment /g, ' ++ ');
+	str = str.replace(/ decrement /g, ' -- ');
+	str = str.replace(/ percentage /g, ' % ');
 
 	return str;
 }
@@ -470,13 +489,18 @@ function objectMethodCall(string) {
 	scopeAssigner(output);
 }
 
+function conditionalCreator(type, condition) {
+	condition = operationsHandler(condition.join(' '));
+	alert(type + ' ' + condition);
+}
+
 function call(array) {
 	let index_of = array.indexOf('of');
 	let method_name = array.slice(0, index_of);
 	method_name = methodNameCreator(method_name);
 	let args = array.slice(index_of + 1);
 	args = args.join(' ').split('comma').map((item) => typeDefiner(item.trim()));
-	scopeAssigner(`${method_name}(${args})`)
+	scopeAssigner(`${method_name}(${args})`);
 }
 
 function comment(data) {
