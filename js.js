@@ -376,8 +376,6 @@ function operationsHandler(string) {
 	let variable_stack = [];
 	let final_output = [];
 
-	alert(operation_arr);
-
 	operation_arr.forEach((item) => {
 		if (item.match(/[a-zA-Z]+/)) {
 			variable_stack.push(item);
@@ -406,10 +404,6 @@ function operationsParser(operation) {
 	str = str.replace(/left shift/g, '<<');
 	str = str.replace(/right shift/g, '>>');
 
-	str = str.replace(/ and /g, ' && ');
-	str = str.replace(/ or /g, ' || ');
-	str = str.replace(/ not /g, ' ! ');
-
 	str = str.replace(/plus equal to/g, '+=');
 	str = str.replace(/minus equal to/g, '-=');
 	str = str.replace(/into equal to/g, '*=');
@@ -433,6 +427,10 @@ function operationsParser(operation) {
 	str = str.replace(/ increment /g, ' ++ ');
 	str = str.replace(/ decrement /g, ' -- ');
 	str = str.replace(/ percentage /g, ' % ');
+
+	str = str.replace(/ and /g, ' && ');
+	str = str.replace(/ or /g, ' || ');
+	str = str.replace(/ not /g, ' ! ');
 
 	return str;
 }
@@ -491,7 +489,10 @@ function objectMethodCall(string) {
 
 function conditionalCreator(type, condition) {
 	condition = operationsHandler(condition.join(' '));
-	alert(type + ' ' + condition);
+	let if_condition = new Condition(type, condition);
+	scopeAssigner(if_condition);
+	scope.push(if_condition);
+	printCode();
 }
 
 function call(array) {

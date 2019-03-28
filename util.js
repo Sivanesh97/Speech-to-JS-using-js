@@ -125,33 +125,30 @@ ${this.body.join('\n')}
 */`;
 };
 
-function Condition(type) {
+function Condition(type, condition) {
 	this.name = '';
 	this.type = type;
 	this.methodName = '';
-	this.arguments = []; // conditions
+	this.arguments = condition; // conditions
 	this.body = [];
-	this.builder = function() {
-		return this.toString();
-	};
 }
 
 Condition.prototype.toString = function() {
 	if (this.type.startsWith('if')) {
-		return `if(${this.arguments.join(' ')}) {` + '\n' + `${this.body.join('\n')}` + '\n      }';
+		return `if(${this.arguments}) {` + '\n' + `${this.body.join('\n')}` + '\n      }';
 	} else if (this.type.startsWith('else if')) {
-		return `else if(${this.arguments.join(' ')}) {` + '\n' + `${this.body.join('\n')}` + '\n     }';
+		return `else if(${this.arguments}) {` + '\n' + `${this.body.join('\n')}` + '\n     }';
 	} else if (this.type.startsWith('else')) {
 		return `else {` + '\n' + `${this.body.join('\n')}` + '\n }';
 	} else if (this.type.startsWith('while')) {
-		return `while(${this.arguments.join(' ')}) {` + '\n' + `${this.body.join('\n')}` + '\n       }';
+		return `while(${this.arguments}) {` + '\n' + `${this.body.join('\n')}` + '\n       }';
 	} else if (this.type.startsWith('do while')) {
-		return 'do{\n' + `${this.body.join('\n')}` + '\n      }' + `while(${this.arguments.join(' ')})`;
+		return 'do{\n' + `${this.body.join('\n')}` + '\n      }' + `while(${this.arguments})`;
 	} else if (this.type.startsWith('switch')) {
-		return `switch(${this.arguments.join(' ')}) {` + '\n' + `${this.body.join('\n')}` + '\n        }';
+		return `switch(${this.arguments}) {` + '\n' + `${this.body.join('\n')}` + '\n        }';
 	} else if (this.type.startsWith('case')) {
-		return `case ${this.arguments.join(' ')} : ` + '\n' + `${this.body.join('\n')}` + '\n ';
+		return `case ${this.arguments} : ` + '\n' + `${this.body.join('\n')}` + '\n ';
 	} else if (this.type.startsWith('default')) {
-		return `default ${this.arguments.join(' ')} : ` + '\n' + `${this.body.join('\n')}` + '\n ';
+		return `default ${this.arguments} : ` + '\n' + `${this.body.join('\n')}` + '\n ';
 	}
 };
