@@ -43,5 +43,6 @@ let dictated = [
 	'call say hello of string arguments comma true comma 12',
 	// Calling normally without equals without work
 	'name equals hello world dot substring of string words',
-	'undo'
+	'undo',
+	'list'
 ];
