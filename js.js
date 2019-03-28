@@ -273,6 +273,14 @@ function methodNameCreator(strArray) {
 }
 
 function assignArguments(strArray) {
+	if (strArray[0] === 'clear') {
+		scope[scope.length - 1].arguments = [];
+		return;
+	} else if (strArray[0] === 'undo') {
+		scope[scope.length - 1].arguments.pop();
+		return;
+	}
+
 	if (scope.length != 0) {
 		let args = strArray.join(' ').split('comma');
 		args = args.map((item) => item.trim().split(' ').join('_'));

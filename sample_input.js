@@ -11,5 +11,12 @@ let dictated = [
 	'return string',
 	'close',
 	'let name equals call say hello of string sivanesh',
-	'call say hello of string sivanesh'
+	'call say hello of string sivanesh',
+	'let name of thunder equals name dot replace of 1 comma true comma string hell',
+	// arrow function
+	'variable name equals arrow function',
+	'arguments hello comma two',
+	'arguments hello comma three',
+	'arguments undo',
+	'arguments clear'
 ];
