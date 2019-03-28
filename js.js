@@ -465,7 +465,6 @@ function objectMethodCall(string) {
 	let variable = str_array[0].trim().split(' ').slice(isDeclarationPresent ? 1 : 0).join('_');
 	output = output.concat(`${variable} = `);
 	str_array = str_array[1];
-	// alert(str_array);
 
 	str_array = str_array.split('.');
 	let variable_name = str_array[0].trim();
