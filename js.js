@@ -145,7 +145,6 @@ function declaration(type, strArray) {
 		if (assignment === predefined_assignment) {
 			assignment = operationsHandler(assignment.join(' '));
 		} else {
-			// assignment = predefined_assignment;
 			return;
 		}
 		console.log('[JS] declaration: assignment', assignment);
@@ -169,6 +168,9 @@ function predefinedAssignments(type, variable, assignment) {
 			return functionCreator(assignment.slice(1));
 		case string.startsWith('arrow function'):
 			return arrowFunctionCreator(type, variable, assignment.slice(2), false);
+		case string.startsWith('call'):
+			call(assignment.slice(1), type, variable);
+			break;
 		default:
 			return assignment;
 	}
@@ -495,13 +497,23 @@ function conditionalCreator(type, condition) {
 	printCode();
 }
 
-function call(array) {
+function call(array, type, variable) {
 	let index_of = array.indexOf('of');
 	let method_name = array.slice(0, index_of);
 	method_name = methodNameCreator(method_name);
 	let args = array.slice(index_of + 1);
 	args = args.join(' ').split('comma').map((item) => typeDefiner(item.trim()));
-	scopeAssigner(`${method_name}(${args})`);
+
+	let output = '';
+	if (type) {
+		output += `${type} `;
+	}
+
+	if (variable) {
+		output += `${variable} = `;
+	}
+
+	scopeAssigner(output + `${method_name}(${args})`);
 }
 
 function comment(data) {
